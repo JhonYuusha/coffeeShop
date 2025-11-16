@@ -1,0 +1,471 @@
+:root {
+    --primary: #4e342e;
+    --secondary: #f4e9d8;
+    --accent: #a1704c;
+    --black: #333;
+    --white: #fff;
+    --shadow: 0 1rem 2rem rgba(0,0,0,.15);
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    transition: all .05s linear; 
+}
+
+html {
+    font-size: 62.5%; 
+    overflow-x: hidden; 
+}
+
+body {
+    background: var(--white);
+}
+
+.no-scroll {
+    overflow: hidden; 
+}
+
+section {
+    padding: 5rem 7%; 
+}
+
+.heading {
+    text-align: center;
+    color: var(--black);
+    text-transform: uppercase;
+    padding-bottom: 3.5rem;
+    font-size: 4.5rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.heading span {
+    color: var(--primary);
+}
+
+.btn {
+    margin-top: 1.5rem;
+    display: inline-block;
+    padding: 1rem 4rem;
+    font-size: 1.8rem;
+    color: var(--white);
+    background: var(--primary);
+    cursor: pointer;
+    border-radius: 0;
+    border: 0.2rem solid var(--primary);
+    transition: background var(--transition-speed), border-color var(--transition-speed), letter-spacing var(--transition-speed); 
+}
+
+.btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    letter-spacing: .2rem;
+}
+
+/* 1. CABEÇALHO/NAVEGAÇÃO */
+.header {
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 7%;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header .logo {
+    color: var(--primary);
+    font-size: 3rem;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+}
+
+.header .navbar a {
+    margin: 0 1.5rem;
+    font-size: 1.7rem;
+    color: var(--black);
+    padding: .5rem 0;
+    border-bottom: .2rem solid transparent; 
+    transition: border-bottom var(--transition-speed), color var(--transition-speed);
+}
+
+.header .navbar a:hover {
+    color: var(--accent);
+    border-bottom: .2rem solid var(--accent); 
+}
+
+.header #menu-btn {
+    font-size: 2.8rem;
+    color: var(--black);
+    cursor: pointer;
+    display: none; 
+}
+
+/* 2. SEÇÃO PRINCIPAL (HERO) */
+.home {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: url('../images/cafe-hero.jpg') no-repeat; 
+    background-size: cover;
+    background-position: center;
+    margin-top: 7rem;
+}
+
+.home .content {
+    max-width: 60rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4rem;
+    border-radius: .5rem;
+    box-shadow: var(--shadow);
+}
+
+.home .content h1 {
+    font-size: 7rem;
+    color: var(--primary);
+    line-height: 1.1;
+    font-family: 'Playfair Display', serif;
+}
+
+.home .content p {
+    font-size: 1.8rem;
+    line-height: 1.8;
+    padding: 1rem 0;
+    color: var(--black);
+}
+
+/* 3. CARDÁPIO */
+.menu .box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+    gap: 3rem;
+}
+
+.menu .box-container .box {
+    text-align: center;
+    padding: 3rem;
+    background: var(--secondary);
+    border-radius: .5rem;
+    box-shadow: var(--shadow);
+    will-change: transform; 
+    transition: transform 0.4s ease, box-shadow 0.4s ease; 
+    cursor: pointer;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 40rem; 
+}
+
+.menu .box-container .box:hover {
+    transform: scale(1.03); 
+    box-shadow: 0 1.5rem 3rem rgba(0,0,0,.2);
+}
+
+.menu .box-container .box img {
+    height: 15rem;
+    width: 100%;
+    object-fit: cover;
+    border-radius: .3rem;
+    margin-bottom: 2rem;
+    will-change: opacity;
+}
+
+.menu .box-container .box h3 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    padding: 1rem 0;
+    font-family: 'Playfair Display', serif;
+}
+
+.menu .box-container .box p {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: var(--black);
+    flex-grow: 1; 
+}
+
+.menu .box-container .box .price {
+    color: var(--accent);
+    font-size: 3rem;
+    font-weight: bolder;
+    display: block;
+    margin-top: 1rem;
+}
+
+/* 4. SOBRE NÓS */
+.sobre .row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3rem;
+}
+
+.sobre .row .image {
+    flex: 1 1 45rem;
+    max-height: 60rem; 
+    overflow: hidden; 
+}
+
+.sobre .row .image img {
+    width: 100%;
+    height: 100%; 
+    object-fit: cover; 
+    border-radius: .5rem;
+    box-shadow: var(--shadow);
+    will-change: opacity, transform;
+}
+
+.sobre .row .content {
+    flex: 1 1 45rem;
+}
+
+.sobre .row .content h3 {
+    font-size: 3.5rem;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.sobre .row .content p {
+    font-size: 1.6rem;
+    line-height: 1.8;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+}
+
+/* 5. AVALIAÇÕES (SLICK CUSTOMIZAÇÃO) */
+.avaliacoes {
+    background: var(--primary);
+    padding: 7rem 0;
+}
+
+.avaliacoes .heading {
+    color: var(--white);
+}
+
+.avaliacoes .heading span {
+    color: var(--secondary);
+}
+
+.avaliacoes .box-container.slider {
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.avaliacoes .box-container .box {
+    background: var(--white);
+    border-radius: .5rem;
+    padding: 3rem;
+    margin: 0 1.5rem;
+    text-align: center;
+    box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
+    
+    min-height: 25rem; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    will-change: transform;
+    transition: transform 0.4s ease;
+    cursor: pointer;
+}
+
+.avaliacoes .box-container .box:hover {
+    transform: scale(1.05); 
+}
+
+.avaliacoes .box-container .box p {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    color: var(--black);
+    font-style: italic;
+    flex-grow: 1; 
+}
+
+.avaliacoes .box-container .box h3 {
+    font-size: 2rem;
+    color: var(--accent);
+    text-align: right;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+}
+
+/* Slick Carousel Arrows and Dots */
+.slick-prev:before, .slick-next:before {
+    color: var(--secondary) !important;
+    font-size: 4rem !important;
+}
+
+.slick-dots li button:before {
+    color: var(--secondary) !important;
+    font-size: 1.2rem !important;
+}
+
+/* 6. CONTATO */
+.contato {
+    min-height: 80vh; /* Garante que a seção tenha altura imediatamente */
+}
+
+.contato .row {
+    display: flex;
+    background: var(--secondary);
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-radius: .5rem;
+    box-shadow: var(--shadow);
+}
+
+.contato .row .mapa {
+    flex: 1 1 45rem;
+    order: 2;
+}
+.contato .row form {
+    flex: 1 1 45rem;
+    padding: 5rem 3rem;
+    text-align: center;
+    order: 1;
+}
+
+.contato .row .mapa iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 45rem;
+    border-radius: .5rem 0 0 .5rem; 
+}
+
+.contato .row form h3 {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.contato .row form .box {
+    width: 100%;
+    padding: 1.5rem;
+    margin: .7rem 0;
+    background: var(--white);
+    color: var(--black);
+    font-size: 1.6rem;
+    border-radius: .3rem;
+    box-shadow: 0 .2rem .5rem rgba(0,0,0,.05);
+}
+
+/* 7. VOLTAR AO TOPO */
+#back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 5rem;
+    height: 5rem;
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 5rem;
+    font-size: 2.5rem;
+    box-shadow: var(--shadow);
+    z-index: 100;
+    display: none; 
+    cursor: pointer;
+    transition: background var(--transition-speed); 
+}
+
+#back-to-top:hover {
+    background: var(--accent);
+}
+
+/* RODAPÉ */
+.footer {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.5rem;
+}
+
+/* ---------------------------------
+   RESPONSIVIDADE (MEDIA QUERIES)
+   --------------------------------- */
+
+@media (max-width: 991px) {
+    .contato .row .mapa iframe {
+        border-radius: .5rem .5rem 0 0;
+    }
+    .contato .row form {
+        order: 1;
+    }
+    .contato .row .mapa {
+        order: 2;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .contato .row .mapa iframe {
+        border-radius: .5rem .5rem 0 0;
+    }
+
+    html {
+        font-size: 50%;
+    }
+
+    .header #menu-btn {
+        display: inline-block; 
+    }
+
+    .header .navbar {
+        position: absolute;
+        top: 100%;
+        right: -100%;
+        background: var(--white);
+        width: 30rem;
+        height: calc(100vh - 7rem);
+        border-left: .1rem solid var(--primary);
+    }
+
+    .header .navbar.active {
+        right: 0; 
+    }
+
+    .header .navbar a {
+        color: var(--black);
+        display: block;
+        margin: 2rem;
+        padding: .5rem;
+        font-size: 2.2rem;
+        border-left: .5rem solid var(--accent);
+        background: var(--secondary);
+    }
+    
+    .home .content h1 {
+        font-size: 5rem;
+    }
+    
+    .contato .row .mapa {
+        min-height: 30rem;
+    }
+    .sobre .row .image {
+        max-height: 40rem;
+    }
+    .menu .box-container .box {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 450px) {
+    .home .content h1 {
+        font-size: 4rem;
+    }
+};
