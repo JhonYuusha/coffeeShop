@@ -26,6 +26,8 @@ html {
 
 body {
     background: var(--white);
+    /* CORREÇÃO PARA O BUG LATERAL: Garante que nada força a barra de rolagem horizontal. */
+    overflow-x: hidden; 
 }
 
 .no-scroll {
@@ -314,7 +316,7 @@ section {
 
 /* 6. CONTATO */
 .contato {
-    min-height: 80vh; /* Garante que a seção tenha altura imediatamente */
+    min-height: 80vh; 
 }
 
 .contato .row {
@@ -415,6 +417,11 @@ section {
 @media (max-width: 768px) {
     .contato .row .mapa iframe {
         border-radius: .5rem .5rem 0 0;
+    }
+    
+    /* SEPARAÇÃO NO MOBILE: Adiciona margem abaixo do formulário */
+    .contato .row form {
+        margin-bottom: 2rem; 
     }
 
     html {

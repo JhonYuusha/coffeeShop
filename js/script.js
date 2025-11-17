@@ -1,8 +1,9 @@
 $(document).ready(function(){
     
     // Constantes de Performance
-    const SCROLL_DURATION = 150; // Otimizado: Scroll leve e direto
-    const HEADER_OFFSET = 100; // Offset para compensar o header fixo
+    // SCROLL AJUSTADO: Aumentado de 150ms para 300ms para um movimento mais suave.
+    const SCROLL_DURATION = 300; 
+    const HEADER_OFFSET = 100; 
     
     // 0. SCROLL SUAVE NO REFRESH (F5)
     $(window).on('beforeunload', function() {
@@ -38,7 +39,7 @@ $(document).ready(function(){
         
         let target = $(this).attr('href');
         
-        // Scroll super leve e direto
+        // Aplica a nova duração de scroll
         $('html, body').animate({
             scrollTop: $(target).offset().top - HEADER_OFFSET
         }, SCROLL_DURATION); 
