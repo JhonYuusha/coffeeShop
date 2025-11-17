@@ -346,13 +346,12 @@ section{
 
 .contato .row .mapa{
     flex: 1 1 45rem;
+    height: 40rem; 
 }
 
 .contato .row .mapa iframe{
     width: 100%;
-    /* Altura mínima para garantir visibilidade mesmo que o form seja menor */
     height: 100%;
-    min-height: 40rem; 
     border-radius: .5rem;
     box-shadow: var(--box-shadow);
 }
