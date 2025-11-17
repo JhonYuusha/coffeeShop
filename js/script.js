@@ -3,14 +3,15 @@ $(document).ready(function(){
     // Constantes de Configuração
     const SCROLL_DURATION = 600; 
     const HEADER_OFFSET = 100; 
-    // Mapeamento de preços dos adicionais
+    
+    // Mapeamento de preços dos adicionais (mantido)
     const EXTRA_PRICES = {
-        'creme': 2.00,
-        'baunilha': 3.00,
-        'cacau': 1.00
+        'Creme': 2.00,
+        'Baunilha': 3.00,
+        'Cacau': 1.00
     };
 
-    // BASE DE DADOS DE PRODUTOS SIMULADA
+    // BASE DE DADOS DE PRODUTOS SIMULADA (mantida)
     const PRODUCTS_DATA = {
         'Latte Macchiato': {
             name: 'Latte Macchiato Suave',
@@ -44,7 +45,6 @@ $(document).ready(function(){
                 { name: 'Grande (450ml)', multiplier: 1.6, dataSize: 'grande' }
             ]
         },
-        // Itens que não são bebidas não têm opções de tamanho/extras, mas precisam estar na base de dados
         'Bolo de Chocolate': {
             name: 'Bolo de Chocolate Delicioso',
             description: 'Fatia molhadinha e intensa. Adoce seu dia!',
@@ -72,56 +72,38 @@ $(document).ready(function(){
     let cart = []; 
     let currentProductData = null; 
     
-    // 0. SCROLL SUAVE NO REFRESH (F5)
-    $(window).on('beforeunload', function() {
-        $('html, body').scrollTop(0);
-    });
-    if (window.location.hash === '') {
-        $('html, body').animate({
-            scrollTop: 0
-        }, 300); 
-    }
-
-    // 1. INICIALIZAÇÃO DO AOS (Animate On Scroll)
-    AOS.init({
-        duration: 600, 
-        once: true,    
-    });
-
-    // 2. FUNCIONALIDADE DO MENU HAMBÚRGUER
+    // Inicializações (mantidas)
+    $(window).on('beforeunload', function() { $('html, body').scrollTop(0); });
+    if (window.location.hash === '') { $('html, body').animate({ scrollTop: 0 }, 300); }
+    AOS.init({ duration: 600, once: true });
+    
+    // Funcionalidade do Menu (mantida)
     $('#menu-btn').on('click', function(){
         $('.navbar').toggleClass('active');
         $('body').toggleClass('no-scroll'); 
     });
-    
-    // Fechar menus ao clicar em um link
     $('.navbar a').on('click', function(){
         $('.navbar').removeClass('active');
         $('body').removeClass('no-scroll');
     });
 
-    // 3. ANIMAÇÃO DE SCROLL SUAVE (Smooth Scroll)
+    // Scroll Suave (mantido)
     $('a[href*="#"]').on('click', function(e){
         let target = $(this).attr('href');
-        if (target === '#' || target === '' || target.startsWith('#')) {
-            // Permite que links de finalização de pedido para #contato fechem o modal
-            if ($(this).hasClass('close-modal')) {
-                closeModal('#cart-modal');
-            }
-            if (target === '#' || target === '') {
-                e.preventDefault();
-                return; 
-            }
+        if (target === '#' || target === '') {
+            e.preventDefault();
+            return; 
         }
-        e.preventDefault();
-        
-        $('html, body').animate({
-            scrollTop: $(target).offset().top - HEADER_OFFSET
-        }, SCROLL_DURATION); 
+        // Se for um link interno (exceto links de fechar modal), faz o scroll
+        if (!$(this).hasClass('close-modal-link') && target.startsWith('#')) {
+             e.preventDefault();
+             $('html, body').animate({
+                 scrollTop: $(target).offset().top - HEADER_OFFSET
+             }, SCROLL_DURATION); 
+        }
     });
 
-
-    // 4. LÓGICA DO BOTÃO VOLTAR AO TOPO (Back to Top)
+    // Back to Top (mantido)
     var $backToTop = $('#back-to-top');
     $(window).on('scroll', function() {
         if ($(window).scrollTop() > 300) {
@@ -131,7 +113,7 @@ $(document).ready(function(){
         }
     });
 
-    // 5. INICIALIZAÇÃO DO SLICK CAROUSEL
+    // Slick Carousel (mantido)
     $('.avaliacoes .slider').slick({
         dots: true, 
         infinite: true,
@@ -150,7 +132,44 @@ $(document).ready(function(){
     // LÓGICA DE MODAIS E CARRINHO (ATUALIZADA)
     // ===================================================
 
-    // 6. ABRIR O MODAL DE DETALHES (Novo Comportamento do Botão "Comprar")
+    // Funções auxiliares para Modais
+    function openModal(selector) {
+        // Fecha qualquer modal aberto antes de abrir o novo
+        $('.modal.active').removeClass('active'); 
+
+        $(selector).addClass('active');
+        $('body').addClass('no-scroll');
+        // Reset da animação para garantir que ela dispare
+        $(selector + ' .modal-content').css('transform', 'translateY(-50px)');
+        setTimeout(() => $(selector + ' .modal-content').css('transform', 'translateY(0)'), 10);
+    }
+    
+    function closeModal(selector) {
+        $(selector + ' .modal-content').css('transform', 'translateY(-50px)'); 
+        
+        setTimeout(() => {
+            $(selector).removeClass('active');
+            // Remove a classe no-scroll do body apenas se nenhum modal estiver aberto
+            if (!$('#cart-modal').hasClass('active') && !$('#product-modal').hasClass('active') && !$('#checkout-modal').hasClass('active')) {
+                 $('body').removeClass('no-scroll');
+            }
+            $(selector + ' .modal-content').css('transform', ''); 
+        }, 300); 
+    }
+
+    function showFeedback(message) {
+        const $feedback = $('#purchase-feedback');
+        $feedback.text(message);
+        $feedback.removeClass('show'); 
+        void $feedback[0].offsetWidth; 
+        $feedback.addClass('show');
+
+        setTimeout(function(){
+            $feedback.removeClass('show');
+        }, 3000); 
+    }
+    
+    // 6. ABRIR O MODAL DE DETALHES
     $('.add-to-cart').on('click', function(e){
         e.preventDefault();
         
@@ -182,31 +201,50 @@ $(document).ready(function(){
         $('#size-options').html(sizeOptionsHtml);
         
         // 3. Verifica se tem adicionais (Normalmente só bebidas)
-        const hasExtras = currentProductData.sizes.length > 0 && currentProductData.sizes[0].name.toLowerCase().includes('ml');
+        const hasExtras = currentProductData.sizes.length > 0 && 
+                          (currentProductData.sizes[0].name.toLowerCase().includes('ml') || 
+                          currentProductData.sizes[0].name.toLowerCase().includes('dose'));
+
         
         if (hasExtras) {
-            $('#extra-options').closest('h4').show(); // Mostra o título "Adicionais"
+            $('#extra-options').closest('h4').show(); 
             $('#extra-options').show();
-            $('#extra-options input[type="checkbox"]').prop('checked', false);
+            // Limpa as seleções anteriores
+            $('#extra-options input[type="checkbox"]').prop('checked', false); 
         } else {
-            $('#extra-options').closest('h4').hide(); // Esconde o título "Adicionais"
+            $('#extra-options').closest('h4').hide(); 
             $('#extra-options').hide();
         }
         
         // 4. Exibe o Modal e recalcula o preço inicial
-        $('#product-modal').addClass('active');
-        $('body').addClass('no-scroll');
+        openModal('#product-modal');
         updateModalPrice();
     });
 
-    // 7. LÓGICA DE CÁLCULO DE PREÇO DINÂMICO NO MODAL
-    $('#product-options-form').on('change', 'input[type="radio"], input[type="checkbox"]', updateModalPrice);
+    // 7. LÓGICA DE CÁLCULO DE PREÇO DINÂMICO E FEEDBACK EMOTE
+    $('#product-options-form').on('change', 'input[type="radio"], input[type="checkbox"]', function() {
+        updateModalPrice();
+        
+        // Feedback Emote (Apenas para seleção de tamanho)
+        if ($(this).attr('name') === 'size') {
+            const selectedSize = $(this).closest('label').data('size');
+            let emote = '';
+            if (selectedSize === 'pequeno') emote = '🙁';
+            else if (selectedSize === 'medio') emote = '🙂';
+            else if (selectedSize === 'grande') emote = '🥳';
+
+            if (emote) {
+                showFeedback(`Tamanho ${selectedSize.toUpperCase()} selecionado! ${emote}`);
+            }
+        }
+    });
 
     function updateModalPrice() {
         if (!currentProductData) return;
 
         let basePrice = currentProductData.basePrice;
-        let selectedMultiplier = parseFloat($('#size-options input[name="size"]:checked').val() || 1.0);
+        // Pega o multiplicador do radio button marcado
+        let selectedMultiplier = parseFloat($('#size-options input[name="size"]:checked').val() || 1.0); 
         let finalPrice = basePrice * selectedMultiplier;
         let selectedSizeLabel = $('#size-options input[name="size"]:checked').data('label');
         
@@ -217,12 +255,11 @@ $(document).ready(function(){
         });
 
         $('#modal-final-price').text(`R$ ${finalPrice.toFixed(2).replace('.', ',')}`);
-        
-        // O botão de adição fica ativo se um tamanho estiver selecionado (o que é garantido pelo 'checked' padrão)
+        // Habilita o botão se o tamanho foi selecionado (útil para produtos com múltiplos tamanhos)
         $('.add-to-cart-final').prop('disabled', !selectedSizeLabel); 
     }
     
-    // 8. LÓGICA FINAL DE ADIÇÃO AO CARRINHO (Botão dentro do Modal)
+    // 8. LÓGICA FINAL DE ADIÇÃO AO CARRINHO (Modal Produto)
     $('#product-options-form').on('submit', function(e) {
         e.preventDefault();
 
@@ -232,7 +269,6 @@ $(document).ready(function(){
         let extras = [];
         let extraCost = 0;
 
-        // Coleta extras e calcula o custo adicional
         $('#extra-options input[name="extra"]:checked').each(function() {
             const extraValue = $(this).val();
             const price = parseFloat($(this).data('price')) || 0;
@@ -240,74 +276,37 @@ $(document).ready(function(){
             extraCost += price;
         });
 
-        // Recalcula o preço final com precisão
         const basePrice = currentProductData.basePrice;
         const multiplier = parseFloat(selectedSizeInput.val());
         const finalPrice = (basePrice * multiplier) + extraCost;
         
-        // Nome para exibição no carrinho
+        // Formata o nome para exibição no carrinho/checkout
         const extrasDisplay = extras.length ? ' c/ ' + extras.join(', ') : '';
         const itemNameWithDetails = `${currentProductData.name} (${selectedSizeLabel})${extrasDisplay}`;
 
-        // 1. Adiciona o item formatado à lista do carrinho
         cart.push({ 
             name: itemNameWithDetails, 
             price: finalPrice, 
             details: { size: selectedSizeLabel, extras: extras }
         });
 
-        // 2. Atualiza o contador com animação
         const $cartCountElement = $('.cart-count');
         $cartCountElement.text(cart.length);
         $cartCountElement.addClass('pulse-cart');
         setTimeout(() => $cartCountElement.removeClass('pulse-cart'), 500); 
         
-        // 3. Mostra a mensagem de feedback
-        showFeedback(`✅ ${currentProductData.name} (${selectedSizeLabel}) adicionado ao seu pedido!`);
+        showFeedback(`✅ ${currentProductData.name} adicionado!`);
 
-        // 4. Fecha o modal
         closeModal('#product-modal');
     });
 
-    // Função auxiliar para fechar qualquer modal
-    function closeModal(selector) {
-        // Aplica a classe para animar a saída (efeito reverso)
-        $(selector + ' .modal-content').css('transform', 'translateY(-50px)'); 
-        
-        setTimeout(() => {
-            $(selector).removeClass('active');
-            // Remove a classe no-scroll do body apenas se nenhum modal estiver aberto
-            if (!$('#cart-modal').hasClass('active') && !$('#product-modal').hasClass('active')) {
-                 $('body').removeClass('no-scroll');
-            }
-            // Reseta a transformação para que a próxima abertura anime corretamente
-            $(selector + ' .modal-content').css('transform', ''); 
-        }, 300); // Deve ser igual ou maior que a transição no CSS
-    }
-
-    // Função auxiliar para mostrar feedback de compra
-    function showFeedback(message) {
-        const $feedback = $('#purchase-feedback');
-        $feedback.text(message);
-        
-        // Reinicia a animação CSS (truque)
-        $feedback.removeClass('show'); 
-        void $feedback[0].offsetWidth; 
-        $feedback.addClass('show');
-
-        setTimeout(function(){
-            $feedback.removeClass('show');
-        }, 3000); 
-    }
-    
     // 9. LÓGICA DE ABRIR O MODAL DO CARRINHO
     $('#cart-icon').on('click', function(){
         updateCartModal(); 
-        $('#cart-modal').addClass('active');
-        $('body').addClass('no-scroll');
+        openModal('#cart-modal');
     });
 
-    // Lógica de Fechar Modais (para ambos)
+    // Lógica de Fechar Modais (para todos)
     $('.close-modal').on('click', function(){
         const modalId = $(this).closest('.modal-content').parent().attr('id');
         closeModal(`#${modalId}`);
@@ -317,17 +316,18 @@ $(document).ready(function(){
     function updateCartModal() {
         const $content = $('#cart-items');
         const $total = $('#cart-total');
+        const $checkoutBtn = $('#checkout-btn-cart');
         
         $content.empty(); 
         let totalSum = 0;
 
         if (cart.length === 0) {
             $content.append('<p class="empty-cart-message">Seu carrinho está vazio. Adicione um café!</p>');
-            $('.checkout-btn').prop('disabled', true).text('Carrinho Vazio');
+            $checkoutBtn.hide(); 
         } else {
-            $('.checkout-btn').prop('disabled', false).text('Finalizar Pedido');
+            $checkoutBtn.show(); 
             
-            // Agrupa os itens idênticos (nome e preço)
+            // Agrupa os itens idênticos (nome e preço) para exibição limpa
             const itemCounts = cart.reduce((acc, item) => {
                 const key = `${item.name}|${item.price.toFixed(2)}`;
                 if (!acc[key]) {
@@ -340,7 +340,7 @@ $(document).ready(function(){
             // Renderiza itens agrupados
             Object.values(itemCounts).forEach(item => {
                 const subtotal = item.price * item.quantity;
-                totalSum += subtotal;
+                totalSum += subtotal; // Soma o subtotal
 
                 const itemHtml = `
                     <div class="cart-item">
@@ -351,28 +351,121 @@ $(document).ready(function(){
                 `;
                 $content.append(itemHtml);
             });
+            
+            // Recalcula o total (a soma acima está somando o subtotal, então o total está correto)
+            totalSum = Object.values(itemCounts).reduce((acc, item) => acc + (item.price * item.quantity), 0);
         }
 
         $total.text(`R$ ${totalSum.toFixed(2).replace('.', ',')}`);
     }
+    
+    // 10. LÓGICA DE ABRIR O MODAL DE CHECKOUT
+    $('#cart-modal').on('click', '.open-checkout-modal', function(e) {
+        e.preventDefault();
+        if (cart.length === 0) return; // Garante que só abre se houver itens
+
+        closeModal('#cart-modal');
+        prepareCheckoutModal();
+        openModal('#checkout-modal');
+    });
+
+    function prepareCheckoutModal() {
+        const $summaryItems = $('#checkout-summary-items');
+        let totalSum = 0;
+        
+        $summaryItems.empty();
+        
+        // Agrupa e mostra os itens como no carrinho
+        const itemCounts = cart.reduce((acc, item) => {
+            const key = `${item.name}|${item.price.toFixed(2)}`;
+            if (!acc[key]) {
+                acc[key] = { ...item, quantity: 0 };
+            }
+            acc[key].quantity += 1;
+            return acc;
+        }, {});
+
+        Object.values(itemCounts).forEach(item => {
+            const subtotal = item.price * item.quantity;
+            totalSum += subtotal; 
+
+            $summaryItems.append(`
+                <div class="cart-item">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-qty">x${item.quantity}</span>
+                    <span class="item-subtotal">R$ ${(subtotal).toFixed(2).replace('.', ',')}</span>
+                </div>
+            `);
+        });
+        
+        $('#checkout-total').text(`R$ ${totalSum.toFixed(2).replace('.', ',')}`);
+        $('#payment-details-area').hide().empty();
+        $('#payment-success-message').hide();
+        $('.checkout-submit-btn').show().prop('disabled', false).text('Confirmar Pedido');
+        $('#checkout-form').trigger('reset'); // Limpa campos de entrega e pagamento
+    }
+    
+    // 11. LÓGICA DE PAGAMENTO E SUBMISSÃO DO CHECKOUT
+    $('#checkout-form').on('change', 'input[name="payment-method"]', function() {
+        const method = $(this).val();
+        const $detailsArea = $('#payment-details-area');
+        // Pega o total do display, converte para float
+        const totalText = $('#checkout-total').text().replace('R$ ', '').replace(',', '.');
+        const total = parseFloat(totalText); 
+        
+        $detailsArea.empty();
+        $detailsArea.show();
+
+        if (method === 'PIX') {
+            $detailsArea.html(`
+                <p>O PIX é de **R$ ${total.toFixed(2).replace('.', ',')}**.</p>
+                <span class="qr-code-placeholder">QR CODE SIMULADO (Chave: Café Expresso)</span>
+                <p>Escaneie o código para concluir a simulação de pagamento.</p>
+            `);
+        } else if (method === 'Dinheiro (Entrega)') {
+            $detailsArea.html(`
+                <p>Pagamento em Dinheiro (Na Entrega).</p>
+                <input type="number" placeholder="Precisa de troco para quanto? (Opcional)" class="box" name="troco" style="margin-top: 1rem;">
+                <p>Valor total: R$ ${total.toFixed(2).replace('.', ',')}</p>
+            `);
+        } else { // Cartão (Entrega)
+            $detailsArea.html('<p>Pagamento com **Cartão de Crédito/Débito** na máquina que será levada pelo entregador.</p>');
+        }
+    });
+
+    $('#checkout-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        const $submitBtn = $('.checkout-submit-btn');
+        const $messageArea = $('#payment-success-message');
+
+        $submitBtn.prop('disabled', true).text('Confirmando...');
+
+        setTimeout(function() {
+            // Limpeza e Confirmação
+            cart = [];
+            $('.cart-count').text(0);
+            
+            $submitBtn.hide();
+            $messageArea.html('<i class="fas fa-check-circle"></i> Seu pedido foi confirmado e está sendo preparado! Agradecemos a preferência.').fadeIn(500);
+
+            // Fecha o modal de checkout após 4 segundos e leva ao topo
+            setTimeout(() => {
+                closeModal('#checkout-modal');
+                $('html, body').animate({ scrollTop: 0 }, SCROLL_DURATION); 
+            }, 4000);
+
+        }, 1500); // 1.5s de delay para simular o envio/processamento
+    });
 
 
-    // 10. FEEDBACK DO FORMULÁRIO DE CONTATO (SIMULADO como Checkout)
+    // 12. FEEDBACK DO FORMULÁRIO DE CONTATO (VOLTOU A SER RESERVA/CONTATO)
     $('.contato form').on('submit', function(e){
         e.preventDefault();
         
-        // Simula o processamento da mensagem/pedido
         setTimeout(function(){
-            
-            // 1. Limpa os campos do formulário
+            $('.mensagem-sucesso').text('Sua mensagem/reserva foi enviada, logo entraremos em contato!').fadeIn(500);
             $('.contato form').trigger('reset');
-
-            // 2. Reseta o carrinho
-            cart = [];
-            $('.cart-count').text(0);
-
-            // 3. Mostra a mensagem de sucesso
-            $('.mensagem-sucesso').text('Seu pedido foi finalizado com sucesso! Em breve entraremos em contato.').fadeIn(500);
             
             setTimeout(function(){
                 $('.mensagem-sucesso').fadeOut(500);

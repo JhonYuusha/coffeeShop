@@ -222,8 +222,56 @@
             </div>
 
             <div class="checkout-btn">
-                <a href="#contato" class="btn close-modal">Finalizar Pedido</a>
+                <a href="#checkout" class="btn open-checkout-modal" id="checkout-btn-cart">Finalizar Pedido</a>
             </div>
+        </div>
+    </div>
+
+
+    <div id="checkout-modal">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal"></i>
+            <h3 class="checkout-heading">Finalizar seu Pedido</h3>
+
+            <form id="checkout-form">
+                
+                <h4>Seu Pedido Resumo:</h4>
+                <div id="checkout-summary-items">
+                    </div>
+                
+                <div class="cart-summary">
+                    <p>Total a Pagar:</p>
+                    <span id="checkout-total">R$ 0,00</span>
+                </div>
+                
+                <hr>
+
+                <h4>Dados de Entrega</h4>
+                <input type="text" placeholder="Seu Nome Completo" class="box" required name="nome">
+                <input type="tel" placeholder="Telefone (WhatsApp)" class="box" required name="telefone">
+                <input type="text" placeholder="Endereço Completo (Rua, Nº, Bairro)" class="box" required name="endereco">
+
+                <h4>Método de Pagamento</h4>
+                <div class="options-group" id="payment-options">
+                    <label data-method="pix">
+                        <input type="radio" name="payment-method" value="PIX" required> PIX
+                    </label>
+                    <label data-method="card">
+                        <input type="radio" name="payment-method" value="Cartão (Entrega)"> Cartão (Crédito/Débito - Na Entrega)
+                    </label>
+                    <label data-method="cash">
+                        <input type="radio" name="payment-method" value="Dinheiro (Entrega)"> Dinheiro (Na Entrega)
+                    </label>
+                </div>
+
+                <div id="payment-details-area" style="display:none; margin-top: 2rem;">
+                    </div>
+
+                <div id="payment-success-message" class="mensagem-sucesso" style="display: none; background: var(--accent);">
+                    </div>
+
+                <button type="submit" class="btn checkout-submit-btn">Confirmar Pedido</button>
+            </form>
         </div>
     </div>
     
