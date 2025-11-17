@@ -26,7 +26,7 @@ html {
 
 body {
     background: var(--white);
-    /* CORREÇÃO PARA O BUG LATERAL: Garante que nada força a barra de rolagem horizontal. */
+    /* Garante que nada força a barra de rolagem horizontal. */
     overflow-x: hidden; 
 }
 
@@ -323,7 +323,8 @@ section {
     display: flex;
     background: var(--secondary);
     flex-wrap: wrap;
-    gap: 1rem;
+    /* Manter o GAP para separação de 1rem (16px) entre mapa e form no mobile e desktop */
+    gap: 1rem; 
     border-radius: .5rem;
     box-shadow: var(--shadow);
 }
@@ -363,6 +364,25 @@ section {
     border-radius: .3rem;
     box-shadow: 0 .2rem .5rem rgba(0,0,0,.05);
 }
+
+/* Estilo da Mensagem de Sucesso */
+.mensagem-sucesso {
+    display: none; 
+    margin-top: 2rem;
+    padding: 1.5rem;
+    font-size: 1.8rem;
+    color: var(--white);
+    background: var(--primary); 
+    border-radius: .3rem;
+    text-align: center;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 
 /* 7. VOLTAR AO TOPO */
 #back-to-top {
@@ -419,11 +439,9 @@ section {
         border-radius: .5rem .5rem 0 0;
     }
     
-    /* SEPARAÇÃO NO MOBILE: Adiciona margem abaixo do formulário */
-    .contato .row form {
-        margin-bottom: 2rem; 
-    }
-
+    /* REMOVIDO: Regra de margin-bottom que estava duplicando o espaçamento no mobile. 
+       O 'gap: 1rem' em .contato .row agora faz o trabalho. */
+    
     html {
         font-size: 50%;
     }

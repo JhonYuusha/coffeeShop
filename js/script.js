@@ -1,8 +1,8 @@
 $(document).ready(function(){
     
     // Constantes de Performance
-    // SCROLL AJUSTADO: Aumentado de 150ms para 300ms para um movimento mais suave.
-    const SCROLL_DURATION = 300; 
+    // SCROLL AJUSTADO: De 300ms para 600ms para um movimento mais lento e suave.
+    const SCROLL_DURATION = 600; 
     const HEADER_OFFSET = 100; 
     
     // 0. SCROLL SUAVE NO REFRESH (F5)
@@ -39,7 +39,7 @@ $(document).ready(function(){
         
         let target = $(this).attr('href');
         
-        // Aplica a nova duração de scroll
+        // Aplica a nova duração de scroll (600ms)
         $('html, body').animate({
             scrollTop: $(target).offset().top - HEADER_OFFSET
         }, SCROLL_DURATION); 
@@ -80,6 +80,26 @@ $(document).ready(function(){
                 }
             }
         ]
+    });
+    
+    // 6. FEEDBACK DO FORMULÁRIO DE CONTATO (SIMULADO)
+    $('.contato form').on('submit', function(e){
+        e.preventDefault();
+        
+        // Simula o processamento da mensagem
+        setTimeout(function(){
+            // 1. Mostra a mensagem de sucesso
+            $('.mensagem-sucesso').fadeIn(500);
+            
+            // 2. Limpa os campos do formulário
+            $('.contato form').trigger('reset');
+            
+            // 3. Esconde a mensagem após 5 segundos
+            setTimeout(function(){
+                $('.mensagem-sucesso').fadeOut(500);
+            }, 5000); 
+
+        }, 500); // 500ms de delay para simular envio
     });
     
 });
