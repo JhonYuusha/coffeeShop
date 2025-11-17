@@ -855,28 +855,26 @@ section{
         max-width: 100%;
     }
     
-    /* CORREÇÃO DO MAPA NO MOBILE */
-    .contato .row {
-        flex-direction: column;
-    }
-
     .contato .row .mapa {
-        /* Garante que o container do mapa tenha altura quando a row vira coluna */
+        width: 100%; 
+        /* ESSENCIAL: Força a altura do container do mapa */
         height: 40rem; 
-        width: 100%;
         margin-top: 3rem; 
+        /* Opcional, mas garante que seja tratado como bloco */
+        display: block; 
     }
     
+    /* Define o iframe DENTRO do container */
     .contato .row .mapa iframe {
         height: 100%; 
         width: 100%;
-        min-height: initial;
+        /* ESSENCIAL: Remove qualquer min-height de desktop que possa atrapalhar */
+        min-height: initial !important; 
     }
     
     .contato .row form {
         width: 100%;
     }
-    /* FIM DA CORREÇÃO DO MAPA */
 
     .modal-content {
         max-width: 95%;
