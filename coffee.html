@@ -19,7 +19,9 @@
 <body>
 
     <header class="header">
-        <a href="#" class="logo">☕ Café Expresso</a>
+        <a href="#" class="logo">
+            <img src="images/simples.png" alt="Café Expresso Logo" style="height: 5rem;"> 
+        </a>
         <nav class="navbar">
             <a href="#home">Início</a>
             <a href="#menu">Cardápio</a>
@@ -27,7 +29,13 @@
             <a href="#avaliacoes">Avaliações</a>
             <a href="#contato">Contato</a>
         </nav>
-        <div id="menu-btn" class="fas fa-bars"></div> 
+        
+        <div class="icons">
+            <div id="cart-icon" class="fas fa-shopping-cart">
+                <span class="cart-count">0</span>
+            </div>
+            <div id="menu-btn" class="fas fa-bars"></div> 
+        </div>
     </header>
     
     <main>
@@ -42,41 +50,59 @@
         <section class="menu" id="menu">
             <h2 class="heading" data-aos="fade-down">Nosso <span>Cardápio</span></h2>
             <div class="box-container">
-                <div class="box" data-aos="fade-up" data-aos-delay="100">
+                <div class="box" data-aos="fade-up" data-aos-delay="100" data-item-name="Latte Macchiato" data-price="15.00">
                     <img src="images/latte.jpg" alt="Latte Macchiato">
                     <h3>Latte Macchiato</h3>
                     <p>Espresso, leite vaporizado e uma camada de espuma.</p>
-                    <span class="price">R$ 15,00</span>
+                    <div class="purchase-area">
+                        <span class="price">R$ 15,00</span>
+                        <a href="#" class="btn add-to-cart">Comprar</a>
+                    </div>
                 </div>
-                <div class="box" data-aos="fade-up" data-aos-delay="200">
+                <div class="box" data-aos="fade-up" data-aos-delay="200" data-item-name="Café Expresso" data-price="8.00">
                     <img src="images/expresso.jpg" alt="Café Expresso">
                     <h3>Café Expresso</h3>
                     <p>Dose única, forte e aromática. A essência do café.</p>
-                    <span class="price">R$ 8,00</span>
+                    <div class="purchase-area">
+                        <span class="price">R$ 8,00</span>
+                        <a href="#" class="btn add-to-cart">Comprar</a>
+                    </div>
                 </div>
-                <div class="box" data-aos="fade-up" data-aos-delay="300">
+                <div class="box" data-aos="fade-up" data-aos-delay="300" data-item-name="Capuccino Clássico" data-price="18.00">
                     <img src="images/capuccino.jpg" alt="Capuccino">
                     <h3>Capuccino Clássico</h3>
                     <p>Equilíbrio perfeito de espresso, leite e cacau.</p>
-                    <span class="price">R$ 18,00</span>
+                    <div class="purchase-area">
+                        <span class="price">R$ 18,00</span>
+                        <a href="#" class="btn add-to-cart">Comprar</a>
+                    </div>
                 </div>
-                <div class="box" data-aos="fade-up" data-aos-delay="400">
+                <div class="box" data-aos="fade-up" data-aos-delay="400" data-item-name="Bolo de Chocolate" data-price="12.00">
                     <img src="images/bolo.jpg" alt="Bolo de Chocolate">
                     <h3>Bolo de Chocolate</h3>
                     <p>Fatia deliciosa com recheio cremoso e intenso.</p>
-                    <span class="price">R$ 12,00</span>
+                    <div class="purchase-area">
+                        <span class="price">R$ 12,00</span>
+                        <a href="#" class="btn add-to-cart">Comprar</a>
+                    </div>
                 </div>
-                <div class="box" data-aos="fade-up" data-aos-delay="500">
+                <div class="box" data-aos="fade-up" data-aos-delay="500" data-item-name="Waffle com Frutas" data-price="22.00">
                     <img src="images/waffle.jpg" alt="Waffle com Frutas">
                     <h3>Waffle com Frutas</h3>
                     <p>Waffle quentinho, frutas frescas e calda de mel.</p>
-                    <span class="price">R$ 22,00</span>
+                    <div class="purchase-area">
+                        <span class="price">R$ 22,00</span>
+                        <a href="#" class="btn add-to-cart">Comprar</a>
+                    </div>
                 </div>
-                <div class="box" data-aos="fade-up" data-aos-delay="600">
+                <div class="box" data-aos="fade-up" data-aos-delay="600" data-item-name="Sanduíche de Peito de Peru" data-price="16.00">
                     <img src="images/sanduiche.jpg" alt="Sanduíche Natural">
                     <h3>Sanduíche de Peito de Peru</h3>
                     <p>Opção leve e fresca para seu almoço.</p>
-                    <span class="price">R$ 16,00</span>
+                    <div class="purchase-area">
+                        <span class="price">R$ 16,00</span>
+                        <a href="#" class="btn add-to-cart">Comprar</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -141,8 +167,70 @@
         
     </main>
 
+    <div id="product-modal">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal"></i>
+            
+            <form id="product-options-form">
+                <div class="product-header">
+                    <img id="modal-image" src="" alt="Imagem do Produto">
+                    <div>
+                        <h3 id="modal-title"></h3>
+                        <p id="modal-description"></p>
+                    </div>
+                </div>
+
+                <h4>Tamanho</h4>
+                <div class="options-group" id="size-options">
+                    </div>
+
+                <h4>Adicionais (Opcional)</h4>
+                <div class="options-group" id="extra-options">
+                    <label>
+                        <input type="checkbox" name="extra" value="Creme" data-price="2.00"> Creme de Leite (R$ 2,00)
+                    </label>
+                    <label>
+                        <input type="checkbox" name="extra" value="Baunilha" data-price="3.00"> Xarope de Baunilha (R$ 3,00)
+                    </label>
+                    <label>
+                        <input type="checkbox" name="extra" value="Cacau" data-price="1.00"> Extra de Cacau (R$ 1,00)
+                    </label>
+                </div>
+
+                <div class="modal-summary">
+                    <p>Preço Final:</p>
+                    <span id="modal-final-price">R$ 0,00</span>
+                </div>
+
+                <button type="submit" class="btn add-to-cart-final">Adicionar ao Carrinho</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="cart-modal">
+        <div class="modal-content">
+            <i class="fas fa-times close-modal"></i>
+            <h3>Seu Carrinho</h3>
+
+            <div id="cart-items">
+                </div>
+
+            <div class="cart-summary">
+                <p>Total:</p>
+                <span id="cart-total">R$ 0,00</span>
+            </div>
+
+            <div class="checkout-btn">
+                <a href="#contato" class="btn close-modal">Finalizar Pedido</a>
+            </div>
+        </div>
+    </div>
+    
+    <div id="purchase-feedback"></div>
+
     <footer class="footer">
-        <p>© 2025 - Café Expresso. Todos os direitos reservados.</p>
+        <p>&copy; 2025 - Café Expresso. Todos os direitos reservados.</p>
     </footer>
 
     <a href="#home" id="back-to-top" class="fas fa-arrow-up"></a> 
@@ -150,6 +238,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/script.js"></script> 
 </body>
 </html>
