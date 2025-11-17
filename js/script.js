@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     // Constantes de Performance
-    // SCROLL AJUSTADO: De 300ms para 600ms para um movimento mais lento e suave.
+    // SCROLL DURATION: Mantido em 600ms para um movimento lento e suave.
     const SCROLL_DURATION = 600; 
     const HEADER_OFFSET = 100; 
     
@@ -39,7 +39,7 @@ $(document).ready(function(){
         
         let target = $(this).attr('href');
         
-        // Aplica a nova duração de scroll (600ms)
+        // Aplica a duração de scroll (600ms)
         $('html, body').animate({
             scrollTop: $(target).offset().top - HEADER_OFFSET
         }, SCROLL_DURATION); 
