@@ -249,7 +249,7 @@ section {
 /* 5. AVALIAÇÕES (SLICK CUSTOMIZAÇÃO) */
 .avaliacoes {
     background: var(--primary);
-    /* Ajustado o padding para garantir espaço para as setas laterais no mobile */
+    /* Mantido o padding para garantir espaço vertical */
     padding: 7rem 0; 
 }
 
@@ -262,8 +262,8 @@ section {
 }
 
 .avaliacoes .box-container.slider {
-    /* Diminuído o max-width para dar mais espaço nas laterais */
-    max-width: 95%; 
+    /* Retornando ao max-width original */
+    max-width: 90%; 
     margin: 0 auto;
 }
 
@@ -271,8 +271,8 @@ section {
     background: var(--white);
     border-radius: .5rem;
     padding: 3rem;
-    /* Ajustado a margem lateral para melhor visualização dos slides */
-    margin: 0 1rem; 
+    /* Mantendo a margem lateral */
+    margin: 0 1.5rem; 
     text-align: center;
     box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1);
     
@@ -317,12 +317,17 @@ section {
     font-size: 1.2rem !important;
 }
 
-/* Ajustes de posição para as setas */
-.slick-prev {
-    left: -1rem !important; /* Move a seta para a esquerda */
+/* AJUSTE CRÍTICO: Recuando as setas para garantir que apareçam fora do container padrão. */
+/* Garantindo que as setas estejam posicionadas fora da área do slider, mas dentro da viewport */
+.avaliacoes .slick-prev {
+    /* Ajustei de -1rem para -4rem */
+    left: -4rem; 
+    z-index: 10;
 }
-.slick-next {
-    right: -1rem !important; /* Move a seta para a direita */
+.avaliacoes .slick-next {
+    /* Ajustei de -1rem para -4rem */
+    right: -4rem; 
+    z-index: 10;
 }
 
 /* 6. CONTATO */
@@ -453,12 +458,24 @@ section {
     html {
         font-size: 50%;
     }
-
-    /* Ajuste o padding da seção avaliações para garantir que as setas caibam */
-    .avaliacoes {
-        padding: 7rem 0; 
+    
+    /* Para telas menores que 768px */
+    .avaliacoes .box-container.slider {
+        /* Permite que o slider use toda a largura disponível */
+        max-width: 100%; 
+        /* Adicione padding lateral à seção (5rem 2% ou o que for confortável) */
+        /* O padding já é definido no 'section' geral (5rem 7%), então vamos ajustar as setas */
     }
     
+    /* AJUSTE PARA O MOBILE: Move as setas um pouco mais para dentro se 4rem for demais,
+       mas mantemos a posição absoluta relativa ao container pai */
+    .avaliacoes .slick-prev {
+        left: 0.5rem; 
+    }
+    .avaliacoes .slick-next {
+        right: 0.5rem; 
+    }
+
     .header #menu-btn {
         display: inline-block; 
     }
