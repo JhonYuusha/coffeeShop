@@ -447,74 +447,56 @@ $(document).ready(function(){
     }
     
     // LÓGICA DE PAGAMENTO E SUBMISSÃO DO CHECKOUT
-    $('#checkout-form').on('change', 'input[name="payment-method"]', function() {
-        const method = $(this).val();
-        const $detailsArea = $('#payment-details-area');
-        // Pega o valor total, remove R$ e substitui vírgula por ponto para parse
-        const totalText = $('#checkout-total').text().replace('R$ ', '').replace(',', '.');
-        const total = parseFloat(totalText); 
-        
-        $detailsArea.empty();
-        $detailsArea.show();
+   $('#checkout-form').on('submit', function(e) {
+  e.preventDefault();
 
-        if (method === 'PIX') {
-            // Usa o QR Code que você uploadou
-            $detailsArea.html(`
-                <p>O PIX é de **R$ ${total.toFixed(2).replace('.', ',')}**.</p>
-                <img src="images/qrcode.png" alt="QR Code PIX Simulado" class="qr-code-placeholder">
-                <p style="margin-top: 1.5rem;">Escaneie o código para concluir a simulação de pagamento.</p>
-                <p style="font-size: 1.2rem; font-weight: 600;">Chave: Café Expresso</p>
-            `);
-        } else if (method === 'Dinheiro (Entrega)') {
-            $detailsArea.html(`
-                <p>Pagamento em Dinheiro (Na Entrega).</p>
-                <input type="number" placeholder="Precisa de troco para quanto? (Opcional)" class="box" name="troco" style="margin-top: 1rem;">
-                <p>Valor total: R$ ${total.toFixed(2).replace('.', ',')}</p>
-            `);
-        } else { // Cartão (Entrega)
-            $detailsArea.html('<p>Pagamento com **Cartão de Crédito/Débito** na máquina que será levada pelo entregador.</p>');
-        }
-    });
+  const email = $('input[name="email"]').val();
+  const method = $('input[name="payment-method"]:checked').val();
+  const totalText = $('#checkout-total').text().replace('R$ ', '').replace(',', '.');
 
-    $('#checkout-form').on('submit', function(e) {
-        e.preventDefault();
-        
-        const $submitBtn = $('.checkout-submit-btn');
-        const $messageArea = $('#payment-success-message');
+  fetch('http://localhost:3000/api/payment/simulate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      method,
+      total: parseFloat(totalText),
+      items: cart, email
+    })
+  })
+  .then(res => res.json())
+ .then(data => {
+  if (data.success) {
+    cart = [];
+    $('.cart-count').text(0);
 
-        $submitBtn.prop('disabled', true).text('Confirmando...');
+    $('#payment-success-message')
+      .html(`
+        <strong>✅ Pedido confirmado!</strong><br><br>
 
-        setTimeout(function() {
-            // SIMULAÇÃO DE LIMPEZA DO CARRINHO E CONFIRMAÇÃO
-            cart = [];
-            $('.cart-count').text(0);
-            
-            $submitBtn.hide();
-            $messageArea.html('<i class="fas fa-check-circle"></i> Seu pedido foi confirmado e está sendo preparado! Agradecemos a preferência.').fadeIn(500);
+        <b>ID do pedido:</b> ${data.paymentId}<br>
+        <b>Status:</b> ${data.status}<br>
+        <b>Método:</b> ${data.method}<br><br>
 
-            // Fecha o modal e volta ao topo após a confirmação
-            setTimeout(() => {
-                closeModal('#checkout-modal');
-                $('html, body').animate({ scrollTop: 0 }, SCROLL_DURATION); 
-            }, 4000);
+        <b>🔐 Token de cancelamento:</b><br>
+        <span style="font-size:18px; letter-spacing:2px">
+          ${data.cancelToken}
+        </span><br><br>
 
-        }, 1500); 
-    });
+        <small>
+          Guarde este token. Ele será necessário caso queira cancelar o pedido.
+        </small>
+      `)
+      .fadeIn();
 
+    $('.checkout-submit-btn').hide();
 
-    // FEEDBACK DO FORMULÁRIO DE CONTATO 
-    $('.contato form').on('submit', function(e){
-        e.preventDefault();
-        
-        setTimeout(function(){
-            $('.mensagem-sucesso').text('Sua mensagem/reserva foi enviada, logo entraremos em contato!').fadeIn(500);
-            $('.contato form').trigger('reset');
-            
-            setTimeout(function(){
-                $('.mensagem-sucesso').fadeOut(500);
-            }, 5000); 
-
-        }, 500); 
-    });
-    
+    setTimeout(() => {
+      closeModal('#checkout-modal');
+    }, 5000);
+  }
+})
+  .catch(() => {
+    alert('Erro ao processar pagamento');
+  });
+});
 });
